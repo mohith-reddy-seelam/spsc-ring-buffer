@@ -1,0 +1,48 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # C++26 contracts + reflection need GCC 16; the official gcc image has it.
+  linux:
+    name: linux / ${{ matrix.preset }}
+    runs-on: ubuntu-24.04
+    container: gcc:16
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [release, tsan, asan]
+    steps:
+      - uses: actions/checkout@v4
+      - run: apt-get update && apt-get install -y ninja-build cmake
+      - run: cmake --preset ${{ matrix.preset }} -DSPSC_NATIVE=OFF
+      - run: cmake --build --preset ${{ matrix.preset }}
+      - run: ctest --preset ${{ matrix.preset }} -j 2
+      # Benchmarks on shared CI runners are meaningless for latency; just make
+      # sure the harness runs end to end and writes well-formed results.
+      - if: matrix.preset == 'release'
+        run: ./build/release/spsc_bench --quick --out_dir=ci-results --benchmark_min_time=0.05s
+      - if: matrix.preset == 'release'
+        run: test -s ci-results/latency_summary.csv && test -s ci-results/machine.json
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            git
+      - run: cmake --preset release -DSPSC_NATIVE=OFF
+      - run: cmake --build --preset release
+      - run: ./build/release/spsc_tests.exe
+      - run: ./build/release/spsc_profile.exe --queue=ring --seconds=1 --out=stacks.txt && test -s stacks.txt

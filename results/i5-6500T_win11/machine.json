@@ -1,0 +1,12 @@
+{
+  "cpu": "Intel(R) Core(TM) i5-6500T CPU @ 2.50GHz",
+  "os": "Windows 11 build 22631",
+  "compiler": "gcc 16.2.0 (mingw-w64)",
+  "build_flags": "GNU 16.2.0 -O3 -DNDEBUG -march=native -g -fno-omit-frame-pointer -std=c++26 -freflection -fcontract-evaluation-semantic=ignore",
+  "logical_cpus": 4,
+  "invariant_tsc": true,
+  "tsc_ghz": 2.4959566450808666,
+  "producer_cpu": 2,
+  "consumer_cpu": 3,
+  "priority": "HIGH_PRIORITY_CLASS / THREAD_PRIORITY_TIME_CRITICAL"
+}
