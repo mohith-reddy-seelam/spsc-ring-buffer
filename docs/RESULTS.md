@@ -270,6 +270,11 @@ spin-then-park policy, only when cores are shared or hyper-threaded. This
 choice depends on the microarchitecture, which is why it is a policy parameter
 of the benchmark and not baked into the queue.
 
+**Confirmed by a second CPU.** On the Emerald Rapids server (§8), `PAUSE` was
+neutral: p50 283 vs 281 ns (+1 %), p99 337 vs 339 ns (−1 %), every repetition
+within ±1 ns. The same instruction cost 27-46 % at p99 on Skylake and nothing
+measurable on a 5th-generation Xeon.
+
 **Also did not help:** removing the allocation from the mutex queue
 (`mutex_ring`). Round-trip latency was unchanged (4.25 vs 4.01 µs in v2;
 4.12 vs 4.32 and 4.16 vs 4.09 µs in the v1 runs). The flame graph says why:
@@ -297,3 +302,46 @@ of the benchmark and not baked into the queue.
   (`-fcontract-evaluation-semantic=ignore`). With checking on, `pop()`'s
   precondition would add a cross-core load per message; the tests run with
   `enforce`.
+
+## 8. Second machine: Linux server with isolated cores
+
+The same code and harness, rerun on a Google Cloud `c4-standard-16`: Intel Xeon
+Platinum 8581C (Emerald Rapids), 8 physical cores with SMT off, 58 GB RAM,
+Ubuntu 26.04 / Linux 7.0, GCC 16 (16.0.1 snapshot). Cores 4-7 are isolated
+(`isolcpus=nohz,domain,managed_irq,4-7 nohz_full=4-7 rcu_nocbs=4-7
+irqaffinity=0-3`); the producer runs on CPU 5 and the consumer on CPU 6. Raw
+files: [`results/gcp_c4_xeon8581c_linux_isolated/`](../results/gcp_c4_xeon8581c_linux_isolated/).
+
+**Noise floor:** 15.6 and 12.0 interruptions/s on CPUs 5 and 6 (0.01 % of CPU
+time), against ~2,300-2,900/s (4-5 %) on the Windows desktop.
+
+| | desktop (Windows, i5-6500T) | **server (Linux, isolated Xeon)** |
+|---|---:|---:|
+| round trip p50 / p99 / p99.9 / p99.99 | 156 ns / 178 ns / 527 ns / 17.3 µs | **281 ns / 339 ns / 430 ns / 550 ns** |
+| mutex queue round trip p50 / p99 / p99.9 | 4.01 µs / 40.9 µs / 75.3 µs | 1.90 µs / 6.26 µs / 8.89 µs |
+| one-way at 1 msg/µs, p50 / p99 / p99.9 | 89 ns / 14.0 µs / 50.4 µs | **158 ns / 196 ns / 233 ns** |
+| throughput, per message / batched ×32 | 61.5 / 186 M msg/s | **142 / 172.5 M msg/s** |
+| mutex queue throughput, per message / batched | 6.2 / 22.3 M msg/s | 3.6 / 40.2 M msg/s |
+
+![server round trip](../results/gcp_c4_xeon8581c_linux_isolated/plots/percentiles_rtt.png)
+
+**What changes, and why:**
+
+* **The tail disappears.** With isolated cores the ring stays under 1 µs out to
+  p99.99, and the paced one-way p99 falls from 14 µs to 196 ns. This confirms §4:
+  the desktop's tails measured Windows, not the queue.
+* **The median round trip is higher on the server (281 vs 156 ns).** On a
+  4-core desktop chip, cache lines move between cores over a short ring bus. A
+  large server die uses a mesh, so each core-to-core transfer takes longer, and
+  the VM adds a little. Production trading servers choose CPUs and core pairs
+  with this in mind.
+* **The mutex looks much better on Linux** (p50 1.90 µs vs 4.01 µs): glibc's
+  futex-based mutex spins briefly and avoids most kernel round trips that
+  MinGW's winpthreads mutex makes. So the ring's lead is smaller but more
+  representative: 6.8× at p50 and 21× at p99.9.
+* **The design conclusions hold.** Slot-sequence signalling vs signalling
+  through `tail`: 281 vs 411 ns p50 (−32 %; −32 % on the desktop too). Without
+  padding: 508 ns; textbook Lamport queue: 603 ns. 64 B vs 128 B padding is
+  within 1 % at p50 here (128 B still has the better p99: 339 vs 345 ns).
+* Repeatability is excellent: all five repetitions of the default ring are
+  within ±1 ns at p50 and p99.

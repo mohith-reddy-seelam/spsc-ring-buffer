@@ -1,0 +1,98 @@
+--------------------------------------------------------------------------------------------------------------------------------
+Benchmark                                                                      Time             CPU   Iterations UserCounters...
+--------------------------------------------------------------------------------------------------------------------------------
+noise/cpu/5/iterations:1/real_time                                          5000 ms        0.125 ms            1 gaps_per_s=15.6 max_ns=63.5111k p50_ns=4.22793k p99.99_ns=63.5111k p99.9_ns=63.5111k p99_ns=63.5111k stolen_pct=0.0122805
+noise/cpu/6/iterations:1/real_time                                          5000 ms        0.090 ms            1 gaps_per_s=12 max_ns=68.2938k p50_ns=4.66011k p99.99_ns=68.2938k p99.9_ns=68.2938k p99_ns=68.2938k stolen_pct=0.0112061
+rtt/ring/iterations:1000000/repeats:5/real_time_mean                         300 ns          300 ns            5 max_ns=16.1496k p50_ns=280.528 p99.99_ns=546.97 p99.9_ns=429.402 p99_ns=339.139
+rtt/ring/iterations:1000000/repeats:5/real_time_median                       300 ns          300 ns            5 max_ns=9.63936k p50_ns=280.876 p99.99_ns=546.97 p99.9_ns=438.271 p99_ns=339.139
+rtt/ring/iterations:1000000/repeats:5/real_time_stddev                      1.02 ns         1.02 ns            5 max_ns=18.3626k p50_ns=0.476292 p99.99_ns=36.6157 p99.9_ns=22.8372 p99_ns=0.61489
+rtt/ring/iterations:1000000/repeats:5/real_time_cv                          0.34 %          0.34 %             5 max_ns=113.70% p50_ns=0.17% p99.99_ns=6.69% p99.9_ns=5.32% p99_ns=0.18%
+rtt/mutex_queue/iterations:1000000/repeats:5/real_time_mean                 2094 ns         2079 ns            5 max_ns=74.0277k p50_ns=1.89987k p99.99_ns=11.4918k p99.9_ns=8.88299k p99_ns=6.25998k
+rtt/mutex_queue/iterations:1000000/repeats:5/real_time_median               2098 ns         2082 ns            5 max_ns=66.6433k p50_ns=1.90091k p99.99_ns=11.5881k p99.9_ns=8.92195k p99_ns=6.26102k
+rtt/mutex_queue/iterations:1000000/repeats:5/real_time_stddev               6.51 ns         6.52 ns            5 max_ns=15.8609k p50_ns=2.25087 p99.99_ns=165.34 p99.9_ns=91.1104 p99_ns=27.8634
+rtt/mutex_queue/iterations:1000000/repeats:5/real_time_cv                   0.31 %          0.31 %             5 max_ns=21.43% p50_ns=0.12% p99.99_ns=1.44% p99.9_ns=1.03% p99_ns=0.45%
+rtt/mutex_ring/iterations:1000000/repeats:5/real_time_mean                  1677 ns         1666 ns            5 max_ns=57.6937k p50_ns=1.6383k p99.99_ns=10.2702k p99.9_ns=8.12785k p99_ns=4.64115k
+rtt/mutex_ring/iterations:1000000/repeats:5/real_time_median                1666 ns         1658 ns            5 max_ns=63.4763k p50_ns=1.61308k p99.99_ns=10.3098k p99.9_ns=8.4602k p99_ns=5.41839k
+rtt/mutex_ring/iterations:1000000/repeats:5/real_time_stddev                89.1 ns         80.9 ns            5 max_ns=18.0405k p50_ns=70.7204 p99.99_ns=748.474 p99.9_ns=550.232 p99_ns=1.21781k
+rtt/mutex_ring/iterations:1000000/repeats:5/real_time_cv                    5.31 %          4.86 %             5 max_ns=31.27% p50_ns=4.32% p99.99_ns=7.29% p99.9_ns=6.77% p99_ns=26.24%
+rtt/ring_index/iterations:1000000/repeats:5/real_time_mean                   422 ns          422 ns            5 max_ns=54.2985k p50_ns=411.14 p99.99_ns=1.20559k p99.9_ns=597.406 p99_ns=534.1
+rtt/ring_index/iterations:1000000/repeats:5/real_time_median                 423 ns          423 ns            5 max_ns=46.8089k p50_ns=410.445 p99.99_ns=743.496 p99.9_ns=600.884 p99_ns=534.795
+rtt/ring_index/iterations:1000000/repeats:5/real_time_stddev                1.75 ns         1.75 ns            5 max_ns=32.7536k p50_ns=1.42888 p99.99_ns=1.04221k p99.9_ns=13.7081 p99_ns=1.42888
+rtt/ring_index/iterations:1000000/repeats:5/real_time_cv                    0.41 %          0.41 %             5 max_ns=60.32% p50_ns=0.35% p99.99_ns=86.45% p99.9_ns=2.29% p99_ns=0.27%
+rtt/ring_pad64/iterations:1000000/repeats:5/real_time_mean                   298 ns          298 ns            5 max_ns=35.7751k p50_ns=282.094 p99.99_ns=577.405 p99.9_ns=437.054 p99_ns=345.747
+rtt/ring_pad64/iterations:1000000/repeats:5/real_time_median                 297 ns          297 ns            5 max_ns=9.46544k p50_ns=281.746 p99.99_ns=583.492 p99.9_ns=451.315 p99_ns=345.226
+rtt/ring_pad64/iterations:1000000/repeats:5/real_time_stddev                5.76 ns         5.76 ns            5 max_ns=39.5111k p50_ns=3.61689 p99.99_ns=24.48 p99.9_ns=22.656 p99_ns=0.777781
+rtt/ring_pad64/iterations:1000000/repeats:5/real_time_cv                    1.93 %          1.93 %             5 max_ns=110.44% p50_ns=1.28% p99.99_ns=4.24% p99.9_ns=5.18% p99_ns=0.22%
+rtt/ring_nocache/iterations:1000000/repeats:5/real_time_mean                 378 ns          378 ns            5 max_ns=29.6063k p50_ns=355.139 p99.99_ns=2.32579k p99.9_ns=483.49 p99_ns=462.446
+rtt/ring_nocache/iterations:1000000/repeats:5/real_time_median               377 ns          377 ns            5 max_ns=20.5718k p50_ns=353.921 p99.99_ns=668.712 p99.9_ns=484.359 p99_ns=463.489
+rtt/ring_nocache/iterations:1000000/repeats:5/real_time_stddev              4.31 ns         4.31 ns            5 max_ns=22.6369k p50_ns=2.92315 p99.99_ns=2.34171k p99.9_ns=2.68024 p99_ns=2.33334
+rtt/ring_nocache/iterations:1000000/repeats:5/real_time_cv                  1.14 %          1.14 %             5 max_ns=76.46% p50_ns=0.82% p99.99_ns=100.68% p99.9_ns=0.55% p99_ns=0.50%
+rtt/ring_packed/iterations:1000000/repeats:5/real_time_mean                  516 ns          516 ns            5 max_ns=49.2852k p50_ns=507.143 p99.99_ns=1.33047k p99.9_ns=649.581 p99_ns=612.362
+rtt/ring_packed/iterations:1000000/repeats:5/real_time_median                517 ns          517 ns            5 max_ns=64.745k p50_ns=508.708 p99.99_ns=910.456 p99.9_ns=646.102 p99_ns=612.188
+rtt/ring_packed/iterations:1000000/repeats:5/real_time_stddev               3.02 ns         3.02 ns            5 max_ns=29.7932k p50_ns=4.65858 p99.99_ns=1.06371k p99.9_ns=9.38589 p99_ns=1.67268
+rtt/ring_packed/iterations:1000000/repeats:5/real_time_cv                   0.59 %          0.59 %             5 max_ns=60.45% p50_ns=0.92% p99.99_ns=79.95% p99.9_ns=1.44% p99_ns=0.27%
+rtt/ring_naive/iterations:1000000/repeats:5/real_time_mean                   624 ns          624 ns            5 max_ns=66.6877k p50_ns=603.319 p99.99_ns=922.805 p99.9_ns=770.975 p99_ns=701.06
+rtt/ring_naive/iterations:1000000/repeats:5/real_time_median                 624 ns          624 ns            5 max_ns=66.072k p50_ns=602.623 p99.99_ns=928.718 p99.9_ns=764.366 p99_ns=700.886
+rtt/ring_naive/iterations:1000000/repeats:5/real_time_stddev               0.821 ns        0.820 ns            5 max_ns=35.2337k p50_ns=0.952584 p99.99_ns=20.5266 p99.9_ns=19.1368 p99_ns=1.88522
+rtt/ring_naive/iterations:1000000/repeats:5/real_time_cv                    0.13 %          0.13 %             5 max_ns=52.83% p50_ns=0.16% p99.99_ns=2.22% p99.9_ns=2.48% p99_ns=0.27%
+rtt/ring_pause/iterations:1000000/repeats:5/real_time_mean                   305 ns          305 ns            5 max_ns=24.9947k p50_ns=283.485 p99.99_ns=553.578 p99.9_ns=429.575 p99_ns=336.704
+rtt/ring_pause/iterations:1000000/repeats:5/real_time_median                 305 ns          305 ns            5 max_ns=14.2864k p50_ns=283.485 p99.99_ns=559.144 p99.9_ns=428.706 p99_ns=336.53
+rtt/ring_pause/iterations:1000000/repeats:5/real_time_stddev               0.557 ns        0.557 ns            5 max_ns=23.1379k p50_ns=0.61489 p99.99_ns=20.9026 p99.9_ns=22.9248 p99_ns=0.727548
+rtt/ring_pause/iterations:1000000/repeats:5/real_time_cv                    0.18 %          0.18 %             5 max_ns=92.57% p50_ns=0.22% p99.99_ns=3.78% p99.9_ns=5.34% p99_ns=0.22%
+oneway/ring/1000/iterations:1000000/repeats:5/real_time_mean                1000 ns         1000 ns            5 max_ns=52.127k p50_ns=157.743 p99.99_ns=3.86235k p99.9_ns=233.397 p99_ns=195.918
+oneway/ring/1000/iterations:1000000/repeats:5/real_time_median              1000 ns         1000 ns            5 max_ns=51.9986k p50_ns=157.83 p99.99_ns=2.61006k p99.9_ns=232.179 p99_ns=195.657
+oneway/ring/1000/iterations:1000000/repeats:5/real_time_stddev             0.000 ns        0.001 ns            5 max_ns=4.89194k p50_ns=0.363774 p99.99_ns=3.85468k p99.9_ns=5.91702 p99_ns=0.388891
+oneway/ring/1000/iterations:1000000/repeats:5/real_time_cv                  0.00 %          0.00 %             5 max_ns=9.38% p50_ns=0.23% p99.99_ns=99.80% p99.9_ns=2.54% p99_ns=0.20%
+oneway/mutex_queue/1000/iterations:1000000/repeats:5/real_time_mean         1000 ns          998 ns            5 max_ns=68.2708k p50_ns=925.239 p99.99_ns=18.9211k p99.9_ns=7.39644k p99_ns=5.42256k
+oneway/mutex_queue/1000/iterations:1000000/repeats:5/real_time_median       1000 ns          998 ns            5 max_ns=63.538k p50_ns=924.805 p99.99_ns=18.4522k p99.9_ns=7.27539k p99_ns=5.49622k
+oneway/mutex_queue/1000/iterations:1000000/repeats:5/real_time_stddev      0.000 ns        0.900 ns            5 max_ns=9.22924k p50_ns=8.53125 p99.99_ns=6.06471k p99.9_ns=198.254 p99_ns=218.749
+oneway/mutex_queue/1000/iterations:1000000/repeats:5/real_time_cv           0.00 %          0.09 %             5 max_ns=13.52% p50_ns=0.92% p99.99_ns=32.05% p99.9_ns=2.68% p99_ns=4.03%
+oneway/mutex_ring/1000/iterations:1000000/repeats:5/real_time_mean          1000 ns          999 ns            5 max_ns=56.9618k p50_ns=886.195 p99.99_ns=22.6338k p99.9_ns=5.90571k p99_ns=3.23147k
+oneway/mutex_ring/1000/iterations:1000000/repeats:5/real_time_median        1000 ns          999 ns            5 max_ns=54.9361k p50_ns=891.326 p99.99_ns=16.0013k p99.9_ns=6.06275k p99_ns=3.73139k
+oneway/mutex_ring/1000/iterations:1000000/repeats:5/real_time_stddev       0.001 ns        0.026 ns            5 max_ns=19.2801k p50_ns=64.1216 p99.99_ns=10.8858k p99.9_ns=717.953 p99_ns=978.782
+oneway/mutex_ring/1000/iterations:1000000/repeats:5/real_time_cv            0.00 %          0.00 %             5 max_ns=33.85% p50_ns=7.24% p99.99_ns=48.10% p99.9_ns=12.16% p99_ns=30.29%
+throughput/ring/repeats:5/manual_time_mean                                 0.458 ms        0.458 ms            5 items_per_second=143.849M/s
+throughput/ring/repeats:5/manual_time_median                               0.462 ms        0.462 ms            5 items_per_second=141.988M/s
+throughput/ring/repeats:5/manual_time_stddev                               0.033 ms        0.033 ms            5 items_per_second=10.6751M/s
+throughput/ring/repeats:5/manual_time_cv                                    7.20 %          7.20 %             5 items_per_second=7.42%
+throughput/mutex_queue/repeats:5/manual_time_mean                           18.0 ms         17.9 ms            5 items_per_second=3.63246M/s
+throughput/mutex_queue/repeats:5/manual_time_median                         18.1 ms         17.9 ms            5 items_per_second=3.61652M/s
+throughput/mutex_queue/repeats:5/manual_time_stddev                        0.260 ms        0.270 ms            5 items_per_second=52.6078k/s
+throughput/mutex_queue/repeats:5/manual_time_cv                             1.44 %          1.51 %             5 items_per_second=1.45%
+throughput/mutex_ring/repeats:5/manual_time_mean                            12.2 ms         12.2 ms            5 items_per_second=5.7167M/s
+throughput/mutex_ring/repeats:5/manual_time_median                          9.81 ms         9.78 ms            5 items_per_second=6.67776M/s
+throughput/mutex_ring/repeats:5/manual_time_stddev                          3.47 ms         3.48 ms            5 items_per_second=1.47768M/s
+throughput/mutex_ring/repeats:5/manual_time_cv                             28.47 %         28.64 %             5 items_per_second=25.85%
+throughput/ring_index/repeats:5/manual_time_mean                           0.570 ms        0.570 ms            5 items_per_second=115.455M/s
+throughput/ring_index/repeats:5/manual_time_median                         0.552 ms        0.552 ms            5 items_per_second=118.755M/s
+throughput/ring_index/repeats:5/manual_time_stddev                         0.045 ms        0.045 ms            5 items_per_second=8.7001M/s
+throughput/ring_index/repeats:5/manual_time_cv                              7.87 %          7.87 %             5 items_per_second=7.54%
+throughput/ring_pad64/repeats:5/manual_time_mean                           0.584 ms        0.584 ms            5 items_per_second=112.271M/s
+throughput/ring_pad64/repeats:5/manual_time_median                         0.584 ms        0.584 ms            5 items_per_second=112.257M/s
+throughput/ring_pad64/repeats:5/manual_time_stddev                         0.014 ms        0.014 ms            5 items_per_second=2.79788M/s
+throughput/ring_pad64/repeats:5/manual_time_cv                              2.47 %          2.47 %             5 items_per_second=2.49%
+throughput/ring_nocache/repeats:5/manual_time_mean                         0.549 ms        0.549 ms            5 items_per_second=119.621M/s
+throughput/ring_nocache/repeats:5/manual_time_median                       0.543 ms        0.543 ms            5 items_per_second=120.629M/s
+throughput/ring_nocache/repeats:5/manual_time_stddev                       0.023 ms        0.023 ms            5 items_per_second=4.94054M/s
+throughput/ring_nocache/repeats:5/manual_time_cv                            4.17 %          4.17 %             5 items_per_second=4.13%
+throughput/ring_packed/repeats:5/manual_time_mean                           5.16 ms         5.16 ms            5 items_per_second=12.8999M/s
+throughput/ring_packed/repeats:5/manual_time_median                         5.44 ms         5.44 ms            5 items_per_second=12.0474M/s
+throughput/ring_packed/repeats:5/manual_time_stddev                        0.654 ms        0.654 ms            5 items_per_second=1.96746M/s
+throughput/ring_packed/repeats:5/manual_time_cv                            12.67 %         12.67 %             5 items_per_second=15.25%
+throughput/ring_naive/repeats:5/manual_time_mean                            2.35 ms         2.35 ms            5 items_per_second=27.8978M/s
+throughput/ring_naive/repeats:5/manual_time_median                          2.38 ms         2.38 ms            5 items_per_second=27.587M/s
+throughput/ring_naive/repeats:5/manual_time_stddev                         0.122 ms        0.122 ms            5 items_per_second=1.46088M/s
+throughput/ring_naive/repeats:5/manual_time_cv                              5.19 %          5.19 %             5 items_per_second=5.24%
+throughput_batch32/ring/repeats:5/manual_time_mean                         0.380 ms        0.380 ms            5 items_per_second=172.332M/s
+throughput_batch32/ring/repeats:5/manual_time_median                       0.380 ms        0.380 ms            5 items_per_second=172.456M/s
+throughput_batch32/ring/repeats:5/manual_time_stddev                       0.001 ms        0.001 ms            5 items_per_second=667.268k/s
+throughput_batch32/ring/repeats:5/manual_time_cv                            0.39 %          0.39 %             5 items_per_second=0.39%
+throughput_batch32/mutex_queue/repeats:5/manual_time_mean                   1.64 ms         1.43 ms            5 items_per_second=40.034M/s
+throughput_batch32/mutex_queue/repeats:5/manual_time_median                 1.63 ms         1.44 ms            5 items_per_second=40.2407M/s
+throughput_batch32/mutex_queue/repeats:5/manual_time_stddev                0.064 ms        0.097 ms            5 items_per_second=1.55444M/s
+throughput_batch32/mutex_queue/repeats:5/manual_time_cv                     3.88 %          6.78 %             5 items_per_second=3.88%
+throughput_batch32/mutex_ring/repeats:5/manual_time_mean                    2.00 ms         1.95 ms            5 items_per_second=33.0264M/s
+throughput_batch32/mutex_ring/repeats:5/manual_time_median                  2.08 ms         2.06 ms            5 items_per_second=31.4468M/s
+throughput_batch32/mutex_ring/repeats:5/manual_time_stddev                 0.192 ms        0.257 ms            5 items_per_second=3.63449M/s
+throughput_batch32/mutex_ring/repeats:5/manual_time_cv                      9.60 %         13.15 %             5 items_per_second=11.00%
+latency results written to results/gcp_c4_xeon8581c_linux_isolated

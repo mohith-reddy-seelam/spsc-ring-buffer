@@ -7,30 +7,51 @@ coordinated-omission-safe latency, HDR-style percentile plots, an ablation
 study, a platform-noise probe, and flame graphs from a sampling profiler
 written for Windows.
 
-**Intel i5-6500T (Skylake) · Windows 11 · GCC 16.2 `-std=c++26` · producer pinned to CPU 2,
-consumer to CPU 3 · 5 M samples per figure**
+Measured on two very different machines, 5 M samples per figure, producer and
+consumer pinned to separate cores:
 
-| Round trip (P → C → P) | p50 | p99 | p99.9 |
-|---|---:|---:|---:|
-| **`spsc::RingBuffer`** | **156 ns** | **178 ns** | **527 ns** |
-| `std::mutex` + `std::queue` | 4.01 µs | 40.9 µs | 75.3 µs |
-| *speed-up* | *26×* | *230×* | *143×* |
+* **Server:** Google Cloud `c4-standard-16`, Intel Xeon Platinum 8581C (Emerald
+  Rapids), Linux 7.0, SMT off, **cores isolated** (`isolcpus`, `nohz_full`,
+  `rcu_nocbs`), GCC 16.
+* **Desktop:** Intel Core i5-6500T (Skylake, 4 cores), Windows 11 with
+  VBS/Hyper-V, GCC 16.2.
+
+| Round trip (P → C → P) | p50 | p99 | p99.9 | p99.99 |
+|---|---:|---:|---:|---:|
+| **ring, server (Linux, isolated)** | **281 ns** | **339 ns** | **430 ns** | **550 ns** |
+| `std::mutex` + `std::queue`, server | 1.90 µs | 6.26 µs | 8.89 µs | 11.5 µs |
+| **ring, desktop (Windows)** | **156 ns** | **178 ns** | **527 ns** | 17.3 µs |
+| `std::mutex` + `std::queue`, desktop | 4.01 µs | 40.9 µs | 75.3 µs | 169 µs |
 
 | One-way, 1 msg/µs offered load | p50 | p99 | p99.9 |
 |---|---:|---:|---:|
-| **`spsc::RingBuffer`** | **89 ns** | **14.0 µs** ¹ | **50.4 µs** ¹ |
-| `std::mutex` + `std::queue` | 9.66 µs | 122 µs | 2.57 ms |
+| **ring, server (Linux, isolated)** | **158 ns** | **196 ns** | **233 ns** |
+| `std::mutex` + `std::queue`, server | 926 ns | 5.51 µs | 7.50 µs |
+| ring, desktop (Windows) | 89 ns | 14.0 µs ¹ | 50.4 µs ¹ |
 
 | Saturated throughput | per message | batches of 32 |
 |---|---:|---:|
-| **`spsc::RingBuffer`** | **61.5 M msg/s** | **186 M msg/s** |
-| `std::mutex` + `std::queue` | 6.2 M msg/s | 22.3 M msg/s |
+| **ring, server** | **142 M msg/s** | **172.5 M msg/s** |
+| `std::mutex` + `std::queue`, server | 3.6 M msg/s | 40.2 M msg/s |
+| ring, desktop | 61.5 M msg/s | 186 M msg/s |
 
-¹ Past ~p95, one-way tails on this machine are set by the OS, not the queue: the
-built-in noise probe measured ~2 300-2 900 interruptions/s of ~15 µs each on
-the pinned cores (VBS/Hyper-V desktop). See [RESULTS.md §4](docs/RESULTS.md).
+**What the two machines show together:**
 
-![Round-trip latency percentiles](results/i5-6500T_win11/plots/percentiles_rtt.png)
+* **Isolated cores remove the tail.** On the server the ring stays under 1 µs
+  out to p99.99, and one-way p99 is 196 ns. On the desktop, everything past ~p95
+  is Windows interrupting the pinned cores ¹.
+* **The desktop has the faster median** (156 vs 281 ns). A 4-core desktop chip
+  passes cache lines between cores over a short ring bus; a large server Xeon
+  uses a mesh, so each core-to-core transfer costs more, plus some VM overhead.
+* **The mutex gap depends on the OS.** Linux's futex-based `std::mutex` is far
+  better than MinGW's on Windows, so the ring's lead at p50 is 6.8× on the server
+  and 26× on the desktop. At p99.9 it is 21× and 143×.
+
+¹ The desktop's built-in noise probe measured ~2,300-2,900 interruptions/s of
+~15 µs each on the pinned cores; the server's isolated cores measured ~15/s.
+See [RESULTS.md §4 and §8](docs/RESULTS.md).
+
+![Round-trip latency percentiles, server](results/gcp_c4_xeon8581c_linux_isolated/plots/percentiles_rtt.png)
 
 ## v2: what changed and what it bought
 
@@ -102,9 +123,12 @@ q.try_push_n(orders);              std::size_t n = q.try_pop_n(buffer);
    index, latency gets worse but throughput gets *better*. That last one is not
    explained yet; RESULTS.md §5 has a hypothesis and the experiment to test it.
 4. **`PAUSE` in the spin loop did not help.** Every textbook recommends it.
-   p99 was worse in all 15 repetitions across three runs (+27 % to +46 %), and
-   in v2 p50 got worse too: Skylake's `PAUSE` takes ~140 cycles, and on a
-   dedicated core without hyper-threads it has nothing to give back.
+   On the Skylake desktop, p99 was worse in all 15 repetitions across three runs
+   (+27 % to +46 %): Skylake's `PAUSE` takes ~140 cycles, and on a dedicated core
+   without hyper-threads it has nothing to give back. On the Emerald Rapids
+   server it was neutral (+1 % p50, −1 % p99). The cost is
+   microarchitecture-specific, which is the real lesson: measure it on the CPU
+   you deploy to.
 5. **Measure the machine before the code.** The harness runs a TSC "hiccup
    meter" on the benchmark cores first. On this desktop it found 4-5 % of each
    core's time stolen in ~15 µs slices, which accounts for the one-way p99.
